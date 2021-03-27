@@ -59,5 +59,24 @@ namespace CSharpConcurrentInstance._02
                 return await client.GetStringAsync(uri);
             }
         }
+
+        /// <summary>
+        /// 简单的超时监控
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static async Task<string> DownloadStringWithTimeout(string uri)
+        {
+            using (var client = new HttpClient())
+            {
+                var downloadTask = client.GetStringAsync(uri);
+                var timeoutTask = Task.Delay(3000);
+                var completedTask = await Task.WhenAny(downloadTask, timeoutTask);
+
+                if (completedTask == timeoutTask)
+                    return null;
+                return await downloadTask;
+            }
+        }
     }
 }
