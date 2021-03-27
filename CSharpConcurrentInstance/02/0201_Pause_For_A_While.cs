@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Console;
 
 namespace CSharpConcurrentInstance._02
 {
