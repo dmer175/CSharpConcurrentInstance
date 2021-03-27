@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
@@ -27,6 +28,36 @@ namespace CSharpConcurrentInstance._02
         {
             await Task.Delay(delay);
             return result;
+        }
+
+        /// <summary>
+        /// 一个简单的指数退避
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public static async Task<string> DownloadStringWithRetries(string uri)
+        {
+            using (var client=new HttpClient())
+            {
+                //第一次重试前等1s,2次2s,3次4s
+                var nextDelay = TimeSpan.FromSeconds(1);
+                for (int i = 0; i < 3; i++)
+                {
+                    WriteLine($"第{i}次调用");
+                    try
+                    {
+                        return await client.GetStringAsync(uri);
+                    }
+                    catch 
+                    {
+                    }
+                    await Task.Delay(nextDelay);
+                    nextDelay = nextDelay + nextDelay;
+                }
+
+                //最后重试一次，让调用者知道出错消息
+                return await client.GetStringAsync(uri);
+            }
         }
     }
 }
