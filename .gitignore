@@ -1,0 +1,5 @@
+# 执行touch命令可使add忽略指定文件
+# touch .gitignore
+/.vs/
+/CSharpConcurrentInstance/obj/
+/NUnitTestProject2/obj/
